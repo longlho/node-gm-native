@@ -32,7 +32,8 @@ Handle<Value> Convert(const Arguments& args) {
     }
 
     // Crop the image to specified size (width, height, xOffset, yOffset)
-    image.resize("100x100");
+    image.resize("100x100^");
+    image.extent(Magick::Geometry(100, 100), Magick::Color(0,0,0,0), Magick::GravityType::NorthGravity);
     image.magick("WEBP");
 
     // Write the image to a file 

@@ -2,23 +2,23 @@ var im = require('../index')
   , http = require('http')
   , execFile = require('child_process').execFile;
 
-console.time('Native IM 200 times');
-for (var i = 0; i < 200; i++) {
+console.time('Native IM 100 times');
+for (var i = 0; i < 100; i++) {
   im.convert({
-    src: "http://assets.iheart.com/images/override/34741.jpg"
+    src: "http://radioedit.iheart.com/service/img/nop()/assets/images/1469.png"
   });
 }
-console.timeEnd('Native IM 200 times');
+console.timeEnd('Native IM 100 times');
 
-console.time('Spawn 200 IM processes');
-var done = 200;
-for (i = 0; i < 200; i++) {
-  execFile("convert", ["http://assets.iheart.com/images/override/34741.jpg", "-resize", "200x200", "webp:-"], {
-    timeout: 2000
+console.time('Spawn 100 IM processes');
+var done = 100;
+for (i = 0; i < 100; i++) {
+  execFile("convert", ["http://radioedit.iheart.com/service/img/nop()/assets/images/1469.png", "-resize", "100x100", "webp:-"], {
+    timeout: 1000
   }, function (err, stdout, stderr) {
     done--;
     if (!done) {
-      console.timeEnd('Spawn 200 IM processes');
+      console.timeEnd('Spawn 100 IM processes');
       testAsyncReq();
     }
   })
@@ -26,10 +26,10 @@ for (i = 0; i < 200; i++) {
 
 
 function testAsyncReq() {
-  console.time('Async img convert 200 times');
-  var done = 200;
-  for (var i = 0; i < 200; i++) {
-    http.get("http://assets.iheart.com/images/override/34741.jpg", function (resp) {
+  console.time('Async img req + native convert 100 times');
+  var done = 100;
+  for (var i = 0; i < 100; i++) {
+    http.get("http://radioedit.iheart.com/service/img/nop()/assets/images/1469.png", function (resp) {
       var data = [];
       resp
       .on('data', function (d) {
@@ -42,9 +42,28 @@ function testAsyncReq() {
         });
         done--;
         if (!done) {
-          console.timeEnd('Async img convert 200 times');
+          console.timeEnd('Async img req + native convert 100 times');
+          testAsyncReqExec();
         }
       })
+    })
+  }
+}
+
+function testAsyncReqExec() {
+  console.time('Async img req + spawn convert 100 times');
+  var done = 100;
+  for (var i = 0; i < 100; i++) {
+    http.get("http://radioedit.iheart.com/service/img/nop()/assets/images/1469.png", function (resp) {
+      var ps = execFile("convert", ["-", "-resize", "100x100", "webp:-"], {
+        timeout: 1000
+      }, function (err, stdout, stderr) {
+        done--;
+        if (!done) {
+          console.timeEnd('Async img req + spawn convert 100 times');
+        }
+      });
+      resp.pipe(ps.stdin);
     })
   }
 }
