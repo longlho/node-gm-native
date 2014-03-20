@@ -5,46 +5,116 @@
 
 using namespace v8;
 
+static void resize(Magick::Image &image, std::string width, std::string height) {
+  image.resize(width + 'x' + height);
+}
+
+static void fill(Magick::Image &image, std::string width, std::string height, Magick::GravityType gravity = Magick::GravityType::NorthGravity) {
+  std::string geometry = width + 'x' + height;
+  image.resize(geometry + '^');
+  image.extent(geometry, Magick::Color(0,0,0,0), gravity);
+}
+
+static Magick::GravityType getGravityType(std::string gravity) {
+  if (gravity == "CenterGravity")
+    return Magick::CenterGravity;
+  else if (gravity == "EastGravity")
+    return Magick::EastGravity;
+  else if (gravity == "ForgetGravity")
+    return Magick::ForgetGravity;
+  else if (gravity == "NorthEastGravity")
+    return Magick::NorthEastGravity;
+  else if (gravity == "NorthGravity")
+    return Magick::NorthGravity;
+  else if (gravity == "NorthWestGravity")
+    return Magick::NorthWestGravity;
+  else if (gravity == "SouthEastGravity")
+    return Magick::SouthEastGravity;
+  else if (gravity == "SouthGravity")
+    return Magick::SouthGravity;
+  else if (gravity == "SouthWestGravity")
+    return Magick::SouthWestGravity;
+  else if (gravity == "WestGravity")
+    return Magick::WestGravity;
+  else {
+    return Magick::ForgetGravity;
+  }
+}
+
+static std::string toString(Local<Value> str) {
+  String::Utf8Value s(str->ToString());
+  return std::string(*s);
+}
+
+
 Handle<Value> Convert(const Arguments& args) {
   HandleScope scope;
+
+  Handle<Object> opts;
+  Local<Value> src;
+  
+  Magick::Blob blob;
+  Magick::Image image;
 
   if (args.Length() != 1 || !args[0]->IsObject()) {
     v8::ThrowException(Exception::TypeError(String::New("Argument should be an object")));
     return scope.Close(Undefined());
   }
 
-  Handle<Object> opts = Handle<Object>::Cast(args[0]);
-
-  Local<Value> src = opts->Get(String::NewSymbol("src"));
-
-  Magick::Image image;
-  Magick::Blob result;
-
+  opts = Handle<Object>::Cast(args[0]);
+  src = opts->Get(String::NewSymbol("src"));
+  
   try {
+    // src can be a file path, URL or a node::Buffer. Note that Magick++ path/URL fetching is blocking so don't use it
     if (src->IsString()) {
       // Convert src to std::string and throw into Magick
-      String::Utf8Value source(src->ToString());
-      image.read(std::string(*source));
+      image.read(toString(src));
     } else {
       // Create a Blob out of src buffer
       Magick::Blob inputBlob(node::Buffer::Data(src), node::Buffer::Length(src));
       image.read(inputBlob);
     }
-
-    // Crop the image to specified size (width, height, xOffset, yOffset)
-    image.resize("100x100^");
-    image.extent(Magick::Geometry(100, 100), Magick::Color(0,0,0,0), Magick::GravityType::NorthGravity);
-    image.magick("WEBP");
-
-    // Write the image to a file 
-    image.write(&result); 
   } catch( Magick::Exception &err_ ) { 
     v8::ThrowException(String::New(err_.what()));
     return scope.Close(Undefined());
   }
 
-  node::Buffer *output = node::Buffer::New(result.length());
-  memcpy(node::Buffer::Data(output->handle_), result.data(), result.length());
+  
+  // Quality: 0 - 100
+  unsigned int quality = opts->Get(String::NewSymbol("quality"))->Uint32Value();
+  if (quality) {
+    image.quality(quality);
+  }
+
+  // Supported format: http://www.imagemagick.org/script/formats.php
+  Local<Value> format = opts->Get(String::NewSymbol("format"));
+  if (format->IsString() && !format->IsUndefined()) {
+    image.magick(toString(format));
+  }
+
+  // Operations, right now we support fill & resize
+  std::string ops = toString(opts->Get(String::NewSymbol("ops")));
+
+  // Width & height, strings are fine for Geometry
+  std::string width = toString(opts->Get(String::NewSymbol("width")));
+  std::string height = toString(opts->Get(String::NewSymbol("height")));
+
+  if (ops == "resize") {
+    resize(image, width, height);
+  }
+  else if (ops == "fill") {
+    std::string gravity = toString(opts->Get(String::NewSymbol("gravity")));
+    fill(image, width, height, getGravityType(gravity));
+  } else {
+    v8::ThrowException(String::New("Unsupported operation"));
+    return scope.Close(Undefined());
+  }
+  
+  // Write the image to a blob 
+  image.write(&blob);
+
+  node::Buffer *output = node::Buffer::New(blob.length());
+  memcpy(node::Buffer::Data(output->handle_), blob.data(), blob.length());
 
   return scope.Close(output->handle_);
 }
