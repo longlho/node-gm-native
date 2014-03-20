@@ -17,7 +17,8 @@
                 '-std=c++11',
                 '-stdlib=libc++',
               ],
-              'OTHER_LDFLAGS': ['-stdlib=libc++']
+              'OTHER_LDFLAGS': ['-stdlib=libc++'],
+              'MACOSX_DEPLOYMENT_TARGET': '10.7'
             },
             "libraries": [
                '<!@(Magick++-config --ldflags --libs)',

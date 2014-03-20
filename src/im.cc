@@ -17,31 +17,33 @@ Handle<Value> Convert(const Arguments& args) {
 
   Local<Value> src = opts->Get(String::NewSymbol("src"));
 
-  if (!src->IsString()) {
-    v8::ThrowException(Exception::TypeError(String::New("src must be a string")));
-    return scope.Close(Undefined());
-  }
-  
   Magick::Image image;
-  Magick::Blob blob;
+  Magick::Blob result;
+
   try {
-    String::Utf8Value source(src->ToString());
-    // Read a file into image object 
-    image.read(std::string(*source));
+    if (src->IsString()) {
+      // Convert src to std::string and throw into Magick
+      String::Utf8Value source(src->ToString());
+      image.read(std::string(*source));
+    } else {
+      // Create a Blob out of src buffer
+      Magick::Blob inputBlob(node::Buffer::Data(src), node::Buffer::Length(src));
+      image.read(inputBlob);
+    }
 
     // Crop the image to specified size (width, height, xOffset, yOffset)
     image.resize("100x100");
     image.magick("WEBP");
 
     // Write the image to a file 
-    image.write(&blob); 
+    image.write(&result); 
   } catch( Magick::Exception &err_ ) { 
     v8::ThrowException(String::New(err_.what()));
     return scope.Close(Undefined());
   }
 
-  node::Buffer *output = node::Buffer::New(blob.length());
-  memcpy(node::Buffer::Data(output->handle_), blob.data(), blob.length());
+  node::Buffer *output = node::Buffer::New(result.length());
+  memcpy(node::Buffer::Data(output->handle_), result.data(), result.length());
 
   return scope.Close(output->handle_);
 }
