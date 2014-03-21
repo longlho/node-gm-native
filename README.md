@@ -21,11 +21,16 @@ var outputBuffer = im.convert({
   gravity: 'NorthGravity',
   // Output format. See http://www.imagemagick.org/script/formats.php. When using webp make sure you compile ImageMagick w/ libwebp
   format: 'WEBP',
-  // Width
+  // Width, required if height is specified
   width: 100,
-  // Height
+  // Height, required if width is specified
   height: 100,
   // Quality, 0 - 100, default is 75
   quality: 75
 });
 ```
+
+TODO
+---
+
+Figure out optional width & height

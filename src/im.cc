@@ -100,14 +100,16 @@ Handle<Value> Convert(const Arguments& args) {
   std::string width = toString(opts->Get(String::NewSymbol("width")));
   std::string height = toString(opts->Get(String::NewSymbol("height")));
 
-  if (ops == "resize") {
-    resize(image, width, height);
-  }
-  else if (ops == "fill") {
-    std::string gravity = toString(opts->Get(String::NewSymbol("gravity")));
-    fill(image, width, height, getGravityType(gravity));
-  } else {
-    v8::ThrowException(String::New("Unsupported operation"));
+  try {
+    if (ops == "resize") {
+      resize(image, width, height);
+    }
+    else if (ops == "fill") {
+      std::string gravity = toString(opts->Get(String::NewSymbol("gravity")));
+      fill(image, width, height, getGravityType(gravity));
+    }
+  } catch (Magick::Error &err_) {
+    v8::ThrowException(String::New(err_.what()));
     return scope.Close(Undefined());
   }
   
