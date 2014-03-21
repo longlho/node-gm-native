@@ -1,6 +1,9 @@
 module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-node-gyp');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+
+  
 
   grunt.initConfig({
     mochaTest: {
@@ -21,6 +24,12 @@ module.exports = function (grunt) {
     },
     gyp: {
       addon: {}
+    },
+    watch: {
+      dev: {
+        files: ['src/*', 'test/*.js', 'index.js'],
+        tasks: ['test']
+      }
     }
   });
 
@@ -28,5 +37,5 @@ module.exports = function (grunt) {
 
   grunt.registerTask('ci', ['mochaTest:ci']);
   grunt.registerTask('test', ['gyp', 'mochaTest:dev']);
-  grunt.registerTask('default', ['test']);
+  grunt.registerTask('default', ['test', 'watch']);
 };

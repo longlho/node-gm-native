@@ -24,6 +24,7 @@
     "grunt-cli": "^0.1.13",
     "grunt": "^0.4.4",
     "grunt-node-gyp": "^0.3.0",
-    "grunt-mocha-test": "^0.10.0"
+    "grunt-mocha-test": "^0.10.0",
+    "grunt-contrib-watch": "^0.6.1"
   }
 }
