@@ -4,7 +4,8 @@ node_js:
 
 before_install:
   - "sudo apt-get update"
-  - "sudo apt-get install libwebp4 libmagick++-dev"
+  - "sudo apt-get remove imagemagick"
+  - "sudo apt-get install libwebp4 imagemagick libmagick++-dev"
 
 notifications:
   email:
