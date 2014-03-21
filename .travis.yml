@@ -2,6 +2,10 @@ language: node_js
 node_js:
   - "0.10"
 
+before_install:
+  - "sudo apt-get update"
+  - "sudo apt-get install libwebp4 libmagick++-dev"
+
 notifications:
   email:
     recipients:

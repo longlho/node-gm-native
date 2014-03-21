@@ -1,6 +1,9 @@
 im-native
 =========
 
+[![Build Status](https://travis-ci.org/longlho/im-native.svg?branch=master)](https://travis-ci.org/longlho/im-native)
+
+
 Node ImageMagick Native module, essentially a rewrite of [node-imagemagick-native](https://github.com/mash/node-imagemagick-native). **Still in development**
 
 Quick usage:
