@@ -20,6 +20,10 @@
     "mocha-as-promised": "^2.0.0",
     "chai-as-promised": "^4.1.1",
     "chai": "^1.9.0",
-    "mocha": "^1.18.2"
+    "mocha": "^1.18.2",
+    "grunt-cli": "^0.1.13",
+    "grunt": "^0.4.4",
+    "grunt-node-gyp": "^0.3.0",
+    "grunt-mocha-test": "^0.10.0"
   }
 }
