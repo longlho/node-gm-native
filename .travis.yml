@@ -11,7 +11,9 @@ before_install:
   - "apt-get source imagemagick"
   - "cd imagemagick-*"
   - "debuild -uc -us"
-  - "sudo dpkg -i ../*magick*.deb"
+  - "cd .."
+  - "sudo dpkg -i *magick*.deb"
+
 
 notifications:
   email:
