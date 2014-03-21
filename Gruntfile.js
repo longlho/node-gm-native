@@ -33,9 +33,14 @@ module.exports = function (grunt) {
     }
   });
 
-  
+  grunt.registerTask('prepTest', function () {
+    var fs = require('fs');
+    if (!fs.existsSync(__dirname + '/test/out')) {
+      fs.mkdirSync(__dirname + '/test/out');
+    }
+  });
 
   grunt.registerTask('ci', ['mochaTest:ci']);
-  grunt.registerTask('test', ['gyp', 'mochaTest:dev']);
+  grunt.registerTask('test', ['gyp', 'prepTest', 'mochaTest:dev']);
   grunt.registerTask('default', ['test', 'watch']);
 };

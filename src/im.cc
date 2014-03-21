@@ -13,7 +13,7 @@ static void resize(Magick::Image &image, std::string width, std::string height) 
 static void fill(Magick::Image &image, std::string width, std::string height, Magick::GravityType gravity = Magick::NorthGravity) {
   std::string geometry = width + 'x' + height;
   image.resize(geometry + '^');
-  image.extent(geometry, Magick::Color(0,0,0,0), gravity);
+  image.extent(geometry, gravity);
 }
 
 static Magick::GravityType getGravityType(std::string gravity) {
