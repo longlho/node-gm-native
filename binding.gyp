@@ -3,6 +3,8 @@
     {
       "target_name": "im-native",
       "sources": [ "src/im.cc" ],
+      "cflags!": [ '-fno-exceptions' ],
+      "cflags_cc!": [ '-fno-exceptions' ],
       "conditions": [
         [
           'OS=="mac"',

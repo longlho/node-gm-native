@@ -2,6 +2,7 @@
 #include <node.h>
 #include <node_buffer.h>
 #include <iostream>
+#include <string.h>
 
 using namespace v8;
 
@@ -9,7 +10,7 @@ static void resize(Magick::Image &image, std::string width, std::string height) 
   image.resize(width + 'x' + height);
 }
 
-static void fill(Magick::Image &image, std::string width, std::string height, Magick::GravityType gravity = Magick::GravityType::NorthGravity) {
+static void fill(Magick::Image &image, std::string width, std::string height, Magick::GravityType gravity = Magick::NorthGravity) {
   std::string geometry = width + 'x' + height;
   image.resize(geometry + '^');
   image.extent(geometry, Magick::Color(0,0,0,0), gravity);
@@ -74,7 +75,7 @@ Handle<Value> Convert(const Arguments& args) {
       Magick::Blob inputBlob(node::Buffer::Data(src), node::Buffer::Length(src));
       image.read(inputBlob);
     }
-  } catch( Magick::Exception &err_ ) { 
+  } catch (Magick::Exception &err_) { 
     v8::ThrowException(String::New(err_.what()));
     return scope.Close(Undefined());
   }
