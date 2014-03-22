@@ -6,6 +6,8 @@
 
 using namespace v8;
 
+#define THROW_EXCEPTION(msg) v8::ThrowException(String::New(msg)); scope.Close(Undefined());
+
 static void resize(Magick::Image &image, std::string width, std::string height) {
   image.resize(width + 'x' + height);
 }
@@ -57,9 +59,10 @@ Handle<Value> Convert(const Arguments& args) {
   Magick::Blob blob;
   Magick::Image image;
 
+  node::Buffer *output;
+
   if (args.Length() != 1 || !args[0]->IsObject()) {
-    v8::ThrowException(Exception::TypeError(String::New("Argument should be an object")));
-    return scope.Close(Undefined());
+    return THROW_EXCEPTION("Argument should be an object");
   }
 
   opts = Handle<Object>::Cast(args[0]);
@@ -75,49 +78,52 @@ Handle<Value> Convert(const Arguments& args) {
       Magick::Blob inputBlob(node::Buffer::Data(src), node::Buffer::Length(src));
       image.read(inputBlob);
     }
-  } catch (Magick::Exception &err_) { 
-    v8::ThrowException(String::New(err_.what()));
-    return scope.Close(Undefined());
-  }
+  
 
   
-  // Quality: 0 - 100
-  unsigned int quality = opts->Get(String::NewSymbol("quality"))->Uint32Value();
-  if (quality) {
-    image.quality(quality);
-  }
+    // Quality: 0 - 100
+    unsigned int quality = opts->Get(String::NewSymbol("quality"))->Uint32Value();
+    if (quality) {
+      image.quality(quality);
+    }
 
-  // Supported format: http://www.imagemagick.org/script/formats.php
-  Local<Value> format = opts->Get(String::NewSymbol("format"));
-  if (format->IsString() && !format->IsUndefined()) {
-    image.magick(toString(format));
-  }
+    // Supported format: http://www.imagemagick.org/script/formats.php
+    Local<Value> format = opts->Get(String::NewSymbol("format"));
+    if (format->IsString() && !format->IsUndefined()) {
+      image.magick(toString(format));
+    }
 
-  // Operations, right now we support fill & resize
-  std::string ops = toString(opts->Get(String::NewSymbol("ops")));
+    // Operations, right now we support fill & resize
+    std::string ops = toString(opts->Get(String::NewSymbol("ops")));
 
-  // Width & height, strings are fine for Geometry
-  std::string width = toString(opts->Get(String::NewSymbol("width")));
-  std::string height = toString(opts->Get(String::NewSymbol("height")));
+    // Width & height, strings are fine for Geometry
+    std::string width = toString(opts->Get(String::NewSymbol("width")));
+    std::string height = toString(opts->Get(String::NewSymbol("height")));
 
-  try {
     if (ops == "resize") {
       resize(image, width, height);
     }
     else if (ops == "fill") {
-      std::string gravity = toString(opts->Get(String::NewSymbol("gravity")));
-      fill(image, width, height, getGravityType(gravity));
+      Local<Value> gravity = opts->Get(String::NewSymbol("gravity"));
+      if (!gravity->IsUndefined()) {
+        fill(image, width, height, getGravityType(toString(gravity)));
+      } else {
+        fill(image, width, height);
+      }
+      
     }
-  } catch (Magick::Error &err_) {
-    v8::ThrowException(String::New(err_.what()));
-    return scope.Close(Undefined());
-  }
   
-  // Write the image to a blob 
-  image.write(&blob);
+    // Write the image to a blob 
+    image.write(&blob);
 
-  node::Buffer *output = node::Buffer::New(blob.length());
-  memcpy(node::Buffer::Data(output->handle_), blob.data(), blob.length());
+    output = node::Buffer::New(blob.length());
+    memcpy(node::Buffer::Data(output->handle_), blob.data(), blob.length());
+
+  } catch (const std::exception &err) {
+    return THROW_EXCEPTION(err.what());
+  } catch (...) {
+    return THROW_EXCEPTION("Unexpected error");
+  }
 
   return scope.Close(output->handle_);
 }
