@@ -61,6 +61,8 @@ Handle<Value> Convert(const Arguments& args) {
 
   node::Buffer *output;
 
+  MagickCore::SetMagickResourceLimit(MagickCore::ThreadResource, 1);
+
   if (args.Length() != 1 || !args[0]->IsObject()) {
     return THROW_EXCEPTION("Argument should be an object");
   }
