@@ -33,4 +33,6 @@ var outputBuffer = im.convert({
 TODO
 ---
 
-Figure out optional width & height
+- Figure out optional width & height
+- More tests
+- Composite (for rounded corners...)
