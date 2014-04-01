@@ -51,7 +51,7 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.registerTask('ci', ['mochaTest:ci']);
+  grunt.registerTask('ci', ['connect:test', 'mochaTest:ci']);
   grunt.registerTask('test', ['gyp', 'prepTest', 'connect:test', 'mochaTest:dev']);
   grunt.registerTask('default', ['watch']);
 };
