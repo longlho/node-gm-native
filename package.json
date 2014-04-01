@@ -26,6 +26,8 @@
     "grunt-node-gyp": "^0.3.0",
     "grunt-mocha-test": "^0.10.0",
     "grunt-contrib-watch": "^0.6.1",
-    "request": "^2.34.0"
+    "request": "^2.34.0",
+    "grunt-contrib-connect": "^0.7.1",
+    "underscore": "^1.6.0"
   }
 }

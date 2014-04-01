@@ -1,6 +1,7 @@
 module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-node-gyp');
+  grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   
@@ -30,6 +31,16 @@ module.exports = function (grunt) {
         files: ['src/*', 'test/*.js', 'index.js'],
         tasks: ['test']
       }
+    },
+    connect: {
+      test: {
+        uses_defaults: {}
+      },
+      alive: {
+        options: {
+          keepalive: true
+        }
+      }
     }
   });
 
@@ -41,6 +52,6 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('ci', ['mochaTest:ci']);
-  grunt.registerTask('test', ['gyp', 'prepTest', 'mochaTest:dev']);
-  grunt.registerTask('default', ['test', 'watch']);
+  grunt.registerTask('test', ['gyp', 'prepTest', 'connect:test', 'mochaTest:dev']);
+  grunt.registerTask('default', ['watch']);
 };
