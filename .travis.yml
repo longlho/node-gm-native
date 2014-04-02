@@ -3,16 +3,16 @@ node_js:
   - "0.10"
 
 before_install:
-  - "sudo apt-get update"
-  - "sudo apt-get remove imagemagick"
+  # - "sudo apt-get update"
+  # - "sudo apt-get remove imagemagick"
   - "sudo apt-get install libwebp-dev libmagick++-dev"
-  - "sudo apt-get build-dep imagemagick"
-  - "sudo apt-get install libwebp-dev devscripts"
-  - "apt-get source imagemagick"
-  - "cd imagemagick-*"
-  - "debuild -uc -us"
-  - "cd .."
-  - "sudo dpkg -i *magick*.deb"
+  # - "sudo apt-get build-dep imagemagick"
+  # - "sudo apt-get install devscripts"
+  # - "apt-get source imagemagick"
+  # - "cd imagemagick-*"
+  # - "debuild -uc -us"
+  # - "cd .."
+  # - "sudo dpkg -i *magick*.deb"
 
 
 notifications:

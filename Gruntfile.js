@@ -15,8 +15,15 @@ module.exports = function (grunt) {
           reporter: 'xunit-file'
         }
       },
-      dev: {
+      travis: {
         src: ['test/test.*.js'],
+        options: {
+          timeout: 5000,
+          reporter: 'spec'
+        }
+      },
+      dev: {
+        src: ['test/*test.*.js'],
         options: {
           timeout: 5000,
           reporter: 'spec'
@@ -51,7 +58,7 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.registerTask('ci', ['connect:test', 'mochaTest:ci']);
+  grunt.registerTask('travis', ['connect:test', 'mochaTest:travis']);
   grunt.registerTask('test', ['gyp', 'prepTest', 'connect:test', 'mochaTest:dev']);
   grunt.registerTask('default', ['watch']);
 };
