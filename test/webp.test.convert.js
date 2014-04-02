@@ -52,5 +52,23 @@ describe('convert', function () {
         });
       });
     });
+
+    describe('resize', function () {
+      describe('format WEBP', function () {
+        it('should be able to resize to 100x100 w/ aspect fill', function (done) {
+          convert('corgi-src.jpg', 'convert-buffer-resize-100.webp', {
+            ops: 'resize',
+            format: 'WEBP'
+          }, done);
+        });
+
+        it('should be able to resize to 100x100 w/ aspect fill w/ transparency', function (done) {
+          convert('google.png', 'convert-buffer-resize-transparent-100.webp', {
+            ops: 'resize',
+            format: 'WEBP'
+          }, done);
+        });
+      });
+    });
   });
 });
