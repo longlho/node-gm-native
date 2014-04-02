@@ -3,7 +3,7 @@ node_js:
   - "0.10"
 
 before_install:
-  # - "sudo apt-get update"
+  - "sudo apt-get update"
   # - "sudo apt-get remove imagemagick"
   - "sudo apt-get install libwebp-dev libmagick++-dev"
   # - "sudo apt-get build-dep imagemagick"
