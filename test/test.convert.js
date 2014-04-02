@@ -38,19 +38,6 @@ describe('convert', function () {
   
   describe('buffer', function () {
     describe('fill', function () {
-      describe('format WEBP', function () {
-        it('should be able to resize to 100x100 w/ aspect fill', function (done) {
-          convert('corgi-src.jpg', 'convert-buffer-fill-100.webp', {
-            format: 'WEBP'
-          }, done);
-        });
-
-        it('should be able to resize to 100x100 w/ aspect fill w/ transparency', function (done) {
-          convert('google.png', 'convert-buffer-fill-transparent-100.webp', {
-            format: 'WEBP'
-          }, done);
-        });
-      });
 
       describe('format PNG', function () {
 
@@ -75,22 +62,7 @@ describe('convert', function () {
     });
     
     describe('resize', function () {
-      describe('format WEBP', function () {
-        it('should be able to resize to 100x100 w/ aspect fill', function (done) {
-          convert('corgi-src.jpg', 'convert-buffer-resize-100.webp', {
-            ops: 'resize',
-            format: 'WEBP'
-          }, done);
-        });
-
-        it('should be able to resize to 100x100 w/ aspect fill w/ transparency', function (done) {
-          convert('google.png', 'convert-buffer-resize-transparent-100.webp', {
-            ops: 'resize',
-            format: 'WEBP'
-          }, done);
-        });
-      });
-
+      
       describe('format PNG', function () {
 
         it('should be able to resize to 100x100 w/ aspect fill format PNG', function (done) {
