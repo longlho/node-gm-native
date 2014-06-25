@@ -49,6 +49,10 @@ static std::string toString(Local<Value> str) {
   return std::string(*s);
 }
 
+Handle<Value> Montage(const Arguments& args) {
+  HandleScope scope;
+  return scope.Close(Undefined());
+}
 
 Handle<Value> Convert(const Arguments& args) {
   HandleScope scope;
@@ -133,6 +137,9 @@ Handle<Value> Convert(const Arguments& args) {
 void Init(Handle<Object> exports) {
   exports->Set(String::NewSymbol("convert"),
       FunctionTemplate::New(Convert)->GetFunction());
+
+  exports->Set(String::NewSymbol("montage"),
+      FunctionTemplate::New(Montage)->GetFunction());
 }
 
 NODE_MODULE(im_native, Init);
