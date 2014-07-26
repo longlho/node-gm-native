@@ -5,12 +5,22 @@ var _ = require('underscore')._
 
 function convert (src, dest, opts, done) {
   var outFilename = __dirname + '/out/' + dest
-    , outBuffer = im.convert(_.extend({
+    , opts = _.extend({
       src: fs.readFileSync(__dirname + '/fixtures/src/' + src),
       ops: 'fill',
       width: 100,
       height: 100
-    }, opts));
+    }, opts)
+    , outBuffer;
+
+  if (!opts.ops) {
+    delete opts.width;
+    delete opts.height;
+    delete opts.ops;
+  }
+
+  outBuffer = im.convert(opts);
+
   fs.writeFileSync(outFilename, outBuffer);
   utils.compare(outFilename, __dirname + '/fixtures/' + dest, done);
 }
@@ -18,7 +28,7 @@ function convert (src, dest, opts, done) {
 describe('convert', function () {
 
   describe('url', function () {
-    
+
     // it('should be able to resize to 100x100 w/ aspect fill & format WEBP', function (done) {
     //   var outFilename = __dirname + '/out/convert-url-fill-100.webp'
     //     , outBuffer = im.convert({
@@ -35,7 +45,7 @@ describe('convert', function () {
 
   });
 
-  
+
   describe('buffer', function () {
     describe('fill', function () {
 
@@ -60,9 +70,9 @@ describe('convert', function () {
         });
       });
     });
-    
+
     describe('resize', function () {
-      
+
       describe('format PNG', function () {
 
         it('should be able to resize to 100x100 w/ aspect fill format PNG', function (done) {
@@ -84,6 +94,20 @@ describe('convert', function () {
         it('should be able to resize to 100x100 w/ aspect fill w/o format', function (done) {
           convert('corgi-src.jpg', 'convert-buffer-resize-100.jpg', {
             ops: 'resize'
+          }, done);
+        });
+      });
+    });
+
+    describe('blur', function () {
+
+      describe('format jpg', function () {
+
+        it('should be able to blur by 20 w/ format jpg', function (done) {
+          convert('corgi-src.jpg', 'convert-buffer-blur.jpg', {
+            format: 'JPG',
+            blurSigma: 20,
+            width: 100
           }, done);
         });
       });

@@ -59,7 +59,7 @@ Handle<Value> Convert(const Arguments& args) {
 
   Handle<Object> opts;
   Local<Value> src;
-  
+
   Magick::Blob blob;
   Magick::Image image;
 
@@ -73,7 +73,7 @@ Handle<Value> Convert(const Arguments& args) {
 
   opts = Handle<Object>::Cast(args[0]);
   src = opts->Get(String::NewSymbol("src"));
-  
+
   try {
     // src can be a file path, URL or a node::Buffer. Note that Magick++ path/URL fetching is blocking so don't use it
     if (src->IsString()) {
@@ -84,9 +84,13 @@ Handle<Value> Convert(const Arguments& args) {
       Magick::Blob inputBlob(node::Buffer::Data(src), node::Buffer::Length(src));
       image.read(inputBlob);
     }
-  
 
-  
+    // Blur Guassian Radius
+    unsigned int blurSigma = opts->Get(String::NewSymbol("blurSigma"))->Uint32Value();
+    if (blurSigma) {
+      image.blur(0, blurSigma);
+    }
+
     // Quality: 0 - 100
     unsigned int quality = opts->Get(String::NewSymbol("quality"))->Uint32Value();
     if (quality) {
@@ -116,10 +120,10 @@ Handle<Value> Convert(const Arguments& args) {
       } else {
         fill(image, width, height);
       }
-      
+
     }
-  
-    // Write the image to a blob 
+
+    // Write the image to a blob
     image.write(&blob);
 
     output = node::Buffer::New(blob.length());
