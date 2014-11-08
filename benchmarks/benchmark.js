@@ -35,7 +35,7 @@ for (var i = 0; i < 100; i++) {
     encoding: null
   }, function (err, resp, data) {
     gm.convert({
-      src: "http://radioedit.iheart.com/service/img/nop()/assets/images/1469.png",
+      src: data,
       width: 100,
       height: 100,
       ops: 'fill',
