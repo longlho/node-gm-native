@@ -1,8 +1,8 @@
 {
   "targets": [
     {
-      "target_name": "im-native",
-      "sources": [ "src/im.cc" ],
+      "target_name": "gm-native",
+      "sources": [ "src/gm.cc" ],
       "cflags!": [ '-fno-exceptions' ],
       "cflags_cc!": [ '-fno-exceptions' ],
       "conditions": [
@@ -11,32 +11,32 @@
           {
             'xcode_settings': {
               'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
-              'OTHER_CFLAGS': [
-                '<!@(Magick++-config --cflags)'
-              ],
               'OTHER_CPLUSPLUSFLAGS' : [
-                '<!@(Magick++-config --cflags)',
+                '<!@(GraphicsMagick++-config --cxxflags --cppflags)',
                 '-std=c++11',
                 '-stdlib=libc++',
               ],
               'OTHER_LDFLAGS': ['-stdlib=libc++'],
-              'MACOSX_DEPLOYMENT_TARGET': '10.7'
+              'MACOSX_DEPLOYMENT_TARGET': '10.7',
+              'LIBTOOLIZE': 'glibtoolize'
             },
             "libraries": [
-               '<!@(Magick++-config --ldflags --libs)',
+              '-L/usr/local/lib',
+              '<!@(GraphicsMagick++-config --ldflags --libs)',
             ],
             'cflags': [
-              '<!@(Magick++-config --cflags --cppflags)'
+              '<!@(GraphicsMagick++-config --cxxflags --cppflags)'
             ],
           }
-        ], [
+        ],
+        [
           'OS=="linux"',
           {
             "libraries": [
-              '<!@(Magick++-config --ldflags --libs)',
+              '<!@(GraphicsMagick++-config --ldflags --libs)',
             ],
             'cflags': [
-              '<!@(Magick++-config --cflags --cppflags)'
+              '<!@(GraphicsMagick++-config --cflags --cppflags)'
             ],
           }
         ]

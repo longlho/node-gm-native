@@ -1,4 +1,6 @@
-var im = require('../index')
+'use strict';
+
+var gm = require('../index')
   , http = require('http')
   , request = require('request')
   , execFile = require('child_process').execFile;
@@ -32,8 +34,8 @@ for (var i = 0; i < 100; i++) {
     timeout: 10000,
     encoding: null
   }, function (err, resp, data) {
-    im.convert({
-      src: data,
+    gm.convert({
+      src: "http://radioedit.iheart.com/service/img/nop()/assets/images/1469.png",
       width: 100,
       height: 100,
       ops: 'fill',
@@ -44,7 +46,7 @@ for (var i = 0; i < 100; i++) {
       console.timeEnd('Async img req + native convert 100 times');
       testRawIM();
     }
-  })
+  });
 }
 
 
@@ -56,7 +58,7 @@ function testRawIM() {
   }, function (err, resp, data) {
     console.time('Raw IM power');
     for (var i = 0; i < 100; i++) {
-      im.convert({
+      gm.convert({
         src: data,
         width: 100,
         height: 100,
@@ -64,32 +66,24 @@ function testRawIM() {
         format: 'WEBP'
       });
     }
-    
+
     console.timeEnd('Raw IM power');
     testAsyncReqExec();
-    
   });
-  
+
 }
 
 function testAsyncReqExec() {
   console.time('Async img req + spawn convert 100 times');
   var done = 100;
   for (var i = 0; i < 100; i++) {
-    request({
-      url: "http://radioedit.iheart.com/service/img/nop()/assets/images/1469.png",
-      timeout: 10000,
-      encoding: null
-    }, function (err, resp, data) {
-      var ps = execFile("convert", ["-", "-resize", "100x100^", '-background', 'transparent', '-gravity', 'North', '-extent', '100x100', "webp:-"], {
-        timeout: 1000
-      }, function (err, stdout, stderr) {
-        done--;
-        if (!done) {
-          console.timeEnd('Async img req + spawn convert 100 times');
-        }
-      });
-      ps.stdin.end(data);
-    })
+    execFile("gm", ["convert", "http://radioedit.iheart.com/service/img/nop()/assets/images/1469.png", "-resize", "100x100^", '-background', 'transparent', '-gravity', 'North', '-extent', '100x100', "webp:-"], {
+      timeout: 1000
+    }, function (err, stdout, stderr) {
+      done--;
+      if (!done) {
+        console.timeEnd('Async img req + spawn convert 100 times');
+      }
+    });
   }
 }

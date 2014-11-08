@@ -1,5 +1,5 @@
 var _ = require('underscore')._
-  , im = require('../index')
+  , gm = require('../index')
   , utils = require('./utils')
   , fs = require('fs');
 
@@ -19,7 +19,7 @@ function convert (src, dest, opts, done) {
     delete opts.ops;
   }
 
-  outBuffer = im.convert(opts);
+  outBuffer = gm.convert(opts);
 
   fs.writeFileSync(outFilename, outBuffer);
   utils.compare(outFilename, __dirname + '/fixtures/' + dest, done);
@@ -31,7 +31,7 @@ describe('convert', function () {
 
     // it('should be able to resize to 100x100 w/ aspect fill & format WEBP', function (done) {
     //   var outFilename = __dirname + '/out/convert-url-fill-100.webp'
-    //     , outBuffer = im.convert({
+    //     , outBuffer = gm.convert({
     //       src: "http://127.0.0.1:8000/test/fixtures/corgi-src.jpg",
     //       ops: 'fill',
     //       format: 'WEBP',

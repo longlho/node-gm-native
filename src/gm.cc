@@ -9,13 +9,13 @@ using namespace v8;
 #define THROW_EXCEPTION(msg) v8::ThrowException(String::New(msg)); scope.Close(Undefined());
 
 static void resize(Magick::Image &image, std::string width, std::string height) {
-  image.resize(width + 'x' + height);
+  image.scale(width + 'x' + height);
 }
 
 static void fill(Magick::Image &image, std::string width, std::string height, Magick::GravityType gravity = Magick::NorthGravity) {
   std::string geometry = width + 'x' + height;
-  image.resize(geometry + '^');
-  image.extent(geometry, Magick::Color("transparent"), gravity);
+  image.scale(geometry + '^');
+  // image.extent(geometry, Magick::Color("transparent"), gravity);
 }
 
 static Magick::GravityType getGravityType(std::string gravity) {
@@ -55,6 +55,8 @@ Handle<Value> Montage(const Arguments& args) {
 }
 
 Handle<Value> Convert(const Arguments& args) {
+  Magick::InitializeMagick(NULL);
+
   HandleScope scope;
 
   Handle<Object> opts;
@@ -64,8 +66,6 @@ Handle<Value> Convert(const Arguments& args) {
   Magick::Image image;
 
   node::Buffer *output;
-
-  MagickCore::SetMagickResourceLimit(MagickCore::ThreadResource, 1);
 
   if (args.Length() != 1 || !args[0]->IsObject()) {
     return THROW_EXCEPTION("Argument should be an object");
@@ -146,4 +146,4 @@ void Init(Handle<Object> exports) {
       FunctionTemplate::New(Montage)->GetFunction());
 }
 
-NODE_MODULE(im_native, Init);
+NODE_MODULE(gm_native, Init);
