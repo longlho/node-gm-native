@@ -1,36 +1,40 @@
-gm-native
+im-native
 =========
 
-[![Build Status](https://travis-ci.org/longlho/node-gm-native.svg?branch=master)](https://travis-ci.org/longlho/node-gm-native)
+[![Build Status](https://travis-ci.org/longlho/im-native.svg?branch=master)](https://travis-ci.org/longlho/im-native)
 
 
-Native GraphicsMagick++ addon for Node. **Still in development**
+Native binding for Magick++. **Still in development**
 
 Quick usage:
 
 ```javascript
 
-var gm = require('gm-native');
+var im = require('im-native');
 
-var outputBuffer = gm.convert({
+var outputBuffer = im.convert(
   // Required. Can also be URL, file path or Buffer object. Note that IM is IO-blocking so using path/URL will block the process
-  src: 'test.jpg',
-  // Required. Operations, right now only has fit & fill (aspect ratio is maintained)
-  ops: 'fit',
-  // Gravity for when using fill, see http://www.graphicsmagick.org/api/types.html#gravitytype
-  gravity: 'NorthGravity',
-  // Output format. See http://www.graphicsmagick.org/Magick++/Image.html#format. When using webp make sure you compile ImageMagick w/ libwebp
-  format: 'WEBP',
-  // Width, required if height is specified
-  width: 100,
-  // Height, required if width is specified
-  height: 100,
-  // Quality, 0 - 100, default is 75
-  quality: 75,
-  // Blue sigma
-  blurSigma: 0
+  'test.jpg',
+  // Required. Operations, just like arguments you'd pass to `convert` process
+  ['scale', '100x100^', 'quality', 75, 'format', 'WEBP', 'extent', '100x100', 'CenterGravity', 'blurSigma', 5],
+  // Required, callback function
+  callbackFn
 });
 ```
+
+Supported methods
+---
+
+**NOTE**: Orders do matter
+
+- `['strip']`
+- `['interlace', '<interlaceType>']`
+- `['scale', '<width>x<height><flag>']`
+- `['extent', '<width>x<height', '<gravity>']`
+- `['format', '<JPG/PNG/WEBP>']`
+- `['quality', '<0 - 100>']`
+- `['filter', '<filter types>']`
+- `['blurSigma', '<blurSigma>']`
 
 TODO
 ---

@@ -8,6 +8,8 @@
   "unused": true,
   "multistr": true,
   "newcap": false,
-  "predef": [ "-Promise" ],
-  "scripturl": true
+  "scripturl": true,
+  "globals": {
+    "describe": true
+  }
 }

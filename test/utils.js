@@ -4,7 +4,7 @@ var execFile = require("child_process").execFile
 
 module.exports = {
   compare: function (src, dest, cb) {
-    execFile('gm', ['compare', '-metric', 'mse', src, dest, 'null:'], function (err) {
+    execFile('compare', ['-metric', 'mse', src, dest, 'null:'], function (err) {
       if (!err) return cb();
       var diff = parseFloat(COMPARE_REGEX.exec(err.message)[1]);
       // 0.001 is good enuf since images created in a diff OS will not be exactly the same as the fixtures
@@ -14,4 +14,4 @@ module.exports = {
       cb();
     });
   }
-};
+}

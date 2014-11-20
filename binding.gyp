@@ -2,9 +2,15 @@
   "targets": [
     {
       "target_name": "gm-native",
-      "sources": [ "src/gm.cc" ],
+      "sources": [
+        "src/main.cc",
+        "src/convert.cc"
+      ],
       "cflags!": [ '-fno-exceptions' ],
       "cflags_cc!": [ '-fno-exceptions' ],
+      "include_dirs": [
+         "<!(node -e \"require('nan')\")"
+      ],
       "conditions": [
         [
           'OS=="mac"',
@@ -36,7 +42,8 @@
               '<!@(GraphicsMagick++-config --ldflags --libs)',
             ],
             'cflags': [
-              '<!@(GraphicsMagick++-config --cflags --cppflags)'
+              '<!@(GraphicsMagick++-config --cxxflags --cppflags)',
+              '-std=c++0x'
             ],
           }
         ]
@@ -44,3 +51,4 @@
     }
   ]
 }
+
