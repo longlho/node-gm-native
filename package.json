@@ -1,21 +1,21 @@
 {
-  "name": "im-native",
-  "version": "0.2.4",
-  "description": "Node ImageMagick Native module",
+  "name": "gm-native",
+  "version": "0.1.0",
+  "description": "Node GraphicsMagick++ Native module",
   "main": "index.js",
   "scripts": {
     "test": "grunt travis"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/longlho/im-native.git"
+    "url": "git://github.com/longlho/node-gm-native.git"
   },
   "author": "Long Ho <holevietlong@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/longlho/im-native/issues"
+    "url": "https://github.com/longlho/node-gm-native/issues"
   },
-  "homepage": "https://github.com/longlho/im-native",
+  "homepage": "https://github.com/longlho/node-gm-native",
   "dependencies": {
     "nan": "^1.4.1"
   },

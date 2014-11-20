@@ -1,19 +1,19 @@
-im-native
+gm-native
 =========
 
-[![Build Status](https://travis-ci.org/longlho/im-native.svg?branch=master)](https://travis-ci.org/longlho/im-native)
+[![Build Status](https://travis-ci.org/longlho/node-gm-native.svg?branch=master)](https://travis-ci.org/longlho/node-gm-native)
 
 
-Native binding for Magick++. **Still in development**
+Native binding for GraphicsMagick++.
 
 Quick usage:
 
 ```javascript
 
-var im = require('im-native');
+var gm = require('gm-native');
 
-var outputBuffer = im.convert(
-  // Required. Can also be URL, file path or Buffer object. Note that IM is IO-blocking so using path/URL will block the process
+var outputBuffer = gm.convert(
+  // Required. Can also be URL, file path or Buffer object. Note that GM is IO-blocking so using path/URL will block the process
   'test.jpg',
   // Required. Operations, just like arguments you'd pass to `convert` process
   ['scale', '100x100^', 'quality', 75, 'format', 'WEBP', 'extent', '100x100', 'CenterGravity', 'blurSigma', 5],
