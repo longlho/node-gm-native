@@ -4,7 +4,7 @@ gm-native
 [![Build Status](https://travis-ci.org/longlho/node-gm-native.svg?branch=master)](https://travis-ci.org/longlho/node-gm-native)
 
 
-Native binding for GraphicsMagick++.
+Native binding for GraphicsMagick++. Some details can be found in this [blog post](https://medium.com/@longho/getting-cozy-with-node-native-add-ons-be045e2f2386).
 
 Quick usage:
 
