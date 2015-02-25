@@ -1,6 +1,6 @@
 {
   "name": "gm-native",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Node GraphicsMagick++ Native module",
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/longlho/node-gm-native",
   "dependencies": {
-    "nan": "^1.4.1"
+    "nan": "^1.6.2"
   },
   "devDependencies": {
     "benchmark": "^1.0.0",
@@ -26,7 +26,7 @@
     "grunt-mocha-test": "^0.12.3",
     "grunt-node-gyp": "^0.4.1",
     "mocha": "^2.0.1",
-    "request": "^2.47.0",
-    "underscore": "^1.7.0"
+    "request": "^2.53.0",
+    "underscore": "^1.8.2"
   }
 }
