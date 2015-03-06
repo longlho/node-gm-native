@@ -1,10 +1,11 @@
+'use strict';
+
 var execFile = require("child_process").execFile
-  , COMPARE_REGEX = /\((.*?)\)/m
-  , SIZE_REGEX = / (\d+x\d+) /m;
+  , COMPARE_REGEX = /Total: (.*?)\s+/m;
 
 module.exports = {
   compare: function (src, dest, cb) {
-    execFile('compare', ['-metric', 'mse', src, dest, 'null:'], function (err) {
+    execFile('gm', ['compare', '-metric', 'mse', src, dest, 'null:'], function (err) {
       if (!err) return cb();
       var diff = parseFloat(COMPARE_REGEX.exec(err.message)[1]);
       // 0.001 is good enuf since images created in a diff OS will not be exactly the same as the fixtures
@@ -14,4 +15,4 @@ module.exports = {
       cb();
     });
   }
-}
+};
